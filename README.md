@@ -2,9 +2,13 @@
 
 Performs 10 simple HTTP GET requests per provider gateway, logs any errors and collects stats.
 
+## setup
+
+`npm install`
+
 ## running
 
-`node index.js`
+`npm start`
 
 ## results
 
