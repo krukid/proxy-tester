@@ -767,9 +767,24 @@ const PROXY_GATEWAYS = [
   },
 ];
 
-exports.PROXY_HOST = PROXY_HOST;
-exports.PROXY_GATEWAYS = PROXY_GATEWAYS;
+// exports.PROXY_HOST = PROXY_HOST;
+// exports.PROXY_GATEWAYS = PROXY_GATEWAYS;
 exports.getCountryGatewayAddress = (country) => {
   const gateway = PROXY_GATEWAYS.find(({ ctr }) => ctr === country);
   return gateway && `${PROXY_HOST}:${gateway.country_port}` || null;
+};
+
+exports.getProxyCount = () => {
+  return PROXY_GATEWAYS.length;
+}
+exports.getProxyGateway = (i) => {
+  const proxy = PROXY_GATEWAYS[i];
+  if (proxy) {
+    return {
+      ...proxy,
+      addr: `http://${PROXY_HOST}:${proxy.country_port}`,
+    };
+  } else {
+    return null;
+  }
 };

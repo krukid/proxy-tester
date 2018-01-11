@@ -1,7 +1,8 @@
 global.APP_ROOT = __dirname;
 
 const stats = require('./lib/stats');
-const { PROXY_HOST, PROXY_GATEWAYS } = require('./providers/geosurf');
+// const { getProxyCount, getProxyGateway } = require('./providers/geosurf');
+const { getProxyCount, getProxyGateway } = require('./providers/balaclava');
 const REPETITIONS = 10;
 const FIBERS = 10;
 
@@ -10,9 +11,9 @@ const eventBus = new EventEmitter();
 require('./lib/workers')(eventBus);
 
 const QUEUE = [];
-for (let i = 0; i < PROXY_GATEWAYS.length; i += 1) {
+for (let i = 0; i < getProxyCount(); i += 1) {
   for (let j = 0; j < REPETITIONS; j += 1) {
-    QUEUE.push(PROXY_GATEWAYS[i]);
+    QUEUE.push(getProxyGateway(i));
   }
 }
 console.log(`[info] Generated test queue (${QUEUE.length})`);
@@ -22,7 +23,7 @@ function fetchQueueItem() {
   const idx = Math.floor(Math.random() * QUEUE.length);
   const item = QUEUE[idx];
   QUEUE.splice(idx, 1);
-  return { ...item, addr: `http://${PROXY_HOST}:${item.country_port}` };
+  return item;
 }
 
 const WORKER_COUNT = Math.min(FIBERS, QUEUE.length);
